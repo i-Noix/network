@@ -1,0 +1,17 @@
+.header {
+    margin-left: 10px;
+}
+
+.newPost {
+    box-sizing: border-box;
+    border: 1px solid #dad7d7;
+    margin-left: 10px;
+    margin-bottom: 5px;
+    padding: 20px;
+    border-radius: 5px;
+    width: 90%;
+}
+
+.newPost button {
+    margin-top: 5px;
+}
