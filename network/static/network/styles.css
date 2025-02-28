@@ -16,7 +16,7 @@
     margin-top: 5px;
 }
 
-/* Style for div post */
+/* Style for div post on page All posts */
 .post {
     border: 1px solid #dad7d7;
     border-radius: 5px;
@@ -35,7 +35,7 @@
 }
 
 .post p:first-of-type{
-    color: black;
+    color: #111111;
 }
 
 .post svg{
@@ -46,5 +46,48 @@
 }
 
 .post a {
+    display: block;
     font-size: 0.9em;
 }
+
+.post a:first-of-type{
+    color: #111111;
+    font-size: 1.1em;
+    margin-bottom: 10px;
+}
+
+.post a:first-of-type:hover{
+    cursor: pointer;
+    text-decoration: underline;
+    text-shadow: 2px 2px 4px #d8d4d4;
+}
+
+/* Style for page Profile */
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+    max-width: 300px;
+    margin: auto;
+    text-align: center;
+    margin-top: 20px;
+    margin-bottom: 20px;
+  }
+  
+.followers {
+    color: rgb(78, 78, 199);
+    font-size: 1em;
+  }
+  
+.card button {
+    border: none;
+    padding: 8px;
+    color: white;
+    text-align: center;
+    cursor: pointer;
+    width: 100%;
+    font-size: 1.2em;
+    font-family: Arial, Helvetica, sans-serif;
+  }
+    
+.card button:hover, a:hover {
+    opacity: 0.7;
+  }

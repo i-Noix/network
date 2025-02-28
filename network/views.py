@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect 
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views.decorators.http import require_POST
 from django.shortcuts import redirect
@@ -15,6 +15,15 @@ def index(request):
     return render(request, "network/index.html", {
         'posts': posts
     })
+
+def profile(request, user_id):
+    profile_user = get_object_or_404(User, id=user_id)
+    posts = profile_user.posts.all()
+    return render(request, 'network/profile.html', {
+        'profile_user': profile_user,
+        'posts': posts
+    })
+
 
 @require_POST
 def create_newPost(request):
