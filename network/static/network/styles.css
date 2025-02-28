@@ -15,3 +15,36 @@
 .newPost button {
     margin-top: 5px;
 }
+
+/* Style for div post */
+.post {
+    border: 1px solid #dad7d7;
+    border-radius: 5px;
+    box-sizing: border-box;
+    width: 90%;
+    padding: 20px;
+    margin-left: 10px;
+    margin-bottom: 5px;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.post p {
+    font-size: 0.9em;
+    color: grey;
+    margin: 0;
+}
+
+.post p:first-of-type{
+    color: black;
+}
+
+.post svg{
+    color: red;
+    margin-right: 5px;
+    height: 0.9em;
+    width: 0.9em;
+}
+
+.post a {
+    font-size: 0.9em;
+}
