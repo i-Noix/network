@@ -18,7 +18,7 @@ def index(request):
 
 def profile(request, user_id):
     profile_user = get_object_or_404(User, id=user_id)
-    posts = profile_user.posts.all()
+    posts = profile_user.posts.all().order_by('-date_time')
     return render(request, 'network/profile.html', {
         'profile_user': profile_user,
         'posts': posts
