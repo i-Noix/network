@@ -19,10 +19,14 @@ def index(request):
 
 @login_required
 def following(request, user_id):
+    # Сheck if the user exists and get access to it
     user = get_object_or_404(User, id=user_id)
-    followersList = user.followers.id
-
-
+    # Get all following_id that user are following
+    followingsListId = user.following.values_list('id', flat=True)
+    posts = Posts.objects.filter(author__id__in = followingsListId).order_by('-date_time')
+    return render(request, 'network/following.html', {
+        'posts': posts
+    })
 
 def profile(request, user_id):
     profile_user = get_object_or_404(User, id=user_id)
