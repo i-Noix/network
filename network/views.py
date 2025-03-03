@@ -6,6 +6,7 @@ from django.urls import reverse
 from django.views.decorators.http import require_POST
 from django.shortcuts import redirect
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 from .models import User, Posts
 
@@ -15,6 +16,13 @@ def index(request):
     return render(request, "network/index.html", {
         'posts': posts
     })
+
+@login_required
+def following(request, user_id):
+    user = get_object_or_404(User, id=user_id)
+    followersList = user.followers.id
+
+
 
 def profile(request, user_id):
     profile_user = get_object_or_404(User, id=user_id)
