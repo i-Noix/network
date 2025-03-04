@@ -1,12 +1,14 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect 
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse 
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views.decorators.http import require_POST
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
+import json
 
 from .models import User, Posts
 
@@ -16,6 +18,25 @@ def index(request):
     return render(request, "network/index.html", {
         'posts': posts
     })
+
+@csrf_exempt
+@login_required
+def follow_unfollow(request, user_id):
+    if request.method == 'POST':
+        target_user = get_object_or_404(User, id=user_id)
+        data = json.loads(request.body)
+        action = data.get('action') # Get follow or unfollow
+
+        if action == 'follow':
+            request.user.following.add(target_user)
+            response = {'message': f'You are now following {target_user.username}'}
+        elif action == 'unfollow':
+            request.user.following.remove(target_user)
+            response = {'message': f'You have unfollowed {target_user.username}'}
+        else:
+            response = {'error': 'Invalid action'}
+        return JsonResponse(response)
+
 
 @login_required
 def following(request, user_id):

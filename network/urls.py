@@ -13,5 +13,10 @@ urlpatterns = [
     path("following/<int:user_id>", views.following, name="following"),
 
 
+    # API route
+    path("follow/<int:user_id>", views.follow_unfollow, name="follow_unfollow"),
+
+
+
 
 ]

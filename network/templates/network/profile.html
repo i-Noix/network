@@ -8,8 +8,10 @@
     <div class="card">
         <h2>{{ profile_user.username }}</h2>
         <p class="followers">{{ profile_user.followers.count }} followers</p>
-        <button data-user="{{ profile_user.id }}" class="btn btn-primary" id="follow-btn" {% if is_following %} style="display: none;" {% endif %}>Follow</button>
-        <button data-user="{{ profile_user.id }}" class="btn btn-danger" id="unfollow-btn" {% if not is_following %} style="display: none;" {% endif %}>Unfollow</button>
+        {% if user.is_authenticated and user.id != profile_user.id %}
+            <button data-user="{{ profile_user.id }}" class="btn btn-primary" id="follow-btn" {% if is_following %} style="display: none;" {% endif %}>Follow</button>
+            <button data-user="{{ profile_user.id }}" class="btn btn-danger" id="unfollow-btn" {% if not is_following %} style="display: none;" {% endif %}>Unfollow</button>
+        {% endif %}
     </div>
     {% for post in posts %}
         <div class="post">
@@ -23,10 +25,13 @@
                 <path d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1"/>
               </svg>{{ post.likes.count }}</p>
         </div>
+    {% empty %}
+        <p>The {{ profile_user.username }} has no posts yet!</p>
     {% endfor %}
 
 
 {% endblock %}
 
 {% block script %}
+        <script src="{% static 'network/profile.js' %}"></script>
 {% endblock %}
