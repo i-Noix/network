@@ -29,10 +29,16 @@ def follow_unfollow(request, user_id):
 
         if action == 'follow':
             request.user.following.add(target_user)
-            response = {'message': f'You are now following {target_user.username}'}
+            response = {
+                'message': f'You are now following {target_user.username}',
+                'followers': request.user.following.count()
+                }
         elif action == 'unfollow':
             request.user.following.remove(target_user)
-            response = {'message': f'You have unfollowed {target_user.username}'}
+            response = {
+                'message': f'You have unfollowed {target_user.username}',
+                'followers': request.user.following.count()
+                }
         else:
             response = {'error': 'Invalid action'}
         return JsonResponse(response)

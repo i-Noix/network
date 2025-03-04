@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('follow-btn').style.display = 'block';
                 document.getElementById('unfollow-btn').style.display = 'none';
             }
+            document.getElementById('followers').innerHTML = `${data.followers} followers`
         })
         .catch(error => {
             console.error('There was a problem with the fetch operation:', error);

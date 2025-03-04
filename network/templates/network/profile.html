@@ -7,7 +7,7 @@
 {% block body %}
     <div class="card">
         <h2>{{ profile_user.username }}</h2>
-        <p class="followers">{{ profile_user.followers.count }} followers</p>
+        <p id="followers">{{ profile_user.followers.count }} followers</p>
         {% if user.is_authenticated and user.id != profile_user.id %}
             <button data-user="{{ profile_user.id }}" class="btn btn-primary" id="follow-btn" {% if is_following %} style="display: none;" {% endif %}>Follow</button>
             <button data-user="{{ profile_user.id }}" class="btn btn-danger" id="unfollow-btn" {% if not is_following %} style="display: none;" {% endif %}>Unfollow</button>
