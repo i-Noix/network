@@ -22,8 +22,8 @@ def following(request, user_id):
     # Сheck if the user exists and get access to it
     user = get_object_or_404(User, id=user_id)
     # Get all following_id that user are following
-    followingsListId = user.following.values_list('id', flat=True)
-    posts = Posts.objects.filter(author__id__in = followingsListId).order_by('-date_time')
+    followingListId = user.following.values_list('id', flat=True)
+    posts = Posts.objects.filter(author__id__in = followingListId).order_by('-date_time')
     return render(request, 'network/following.html', {
         'posts': posts
     })
@@ -31,9 +31,11 @@ def following(request, user_id):
 def profile(request, user_id):
     profile_user = get_object_or_404(User, id=user_id)
     posts = profile_user.posts.all().order_by('-date_time')
+    is_following = profile_user.followers.filter(id=request.user.id).exists()
     return render(request, 'network/profile.html', {
         'profile_user': profile_user,
-        'posts': posts
+        'posts': posts,
+        'is_following': is_following
     })
 
 
