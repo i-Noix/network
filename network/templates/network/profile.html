@@ -13,7 +13,7 @@
             <button data-user="{{ profile_user.id }}" class="btn btn-danger" id="unfollow-btn" {% if not is_following %} style="display: none;" {% endif %}>Unfollow</button>
         {% endif %}
     </div>
-    {% for post in posts %}
+    {% for post in page_obj %}
         <div class="post">
             <a href="{% url 'profile' user_id=post.author.id %}"><strong>{{ post.author }}</strong></a>
             {% if user.is_authenticated and post.author.id == user.id %}
@@ -28,8 +28,43 @@
     {% empty %}
         <p>The {{ profile_user.username }} has no posts yet!</p>
     {% endfor %}
+    <div class="pagination-container">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a></li>
+            {% endif %}
+            {% for page in page_obj.paginator.page_range %}
+                <li class="page-item {% if page == page_obj.number %}active{% endif %}">
+                    <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                </li>
+            {% endfor %}
+            {% if page_obj.has_next %}
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a></li>
+            {% endif %}
+        </ul>
+    </div>
+    
 
-
+        <!-- <span class="step-links">
+            {% if page_obj.has_previous %}
+                <ul class="pagination">
+                    <li class="page-item"><a class="page-link" href="?page=1">&laquo; first</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">previous</a></li>
+                </ul>
+            {% endif %}
+    
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+    
+            {% if page_obj.has_next %}
+                <ul class="pagination">
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">next</a></li>
+                    <li class="page-item"><a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a></li>
+                </ul>
+            {% endif %}
+        </span>
+    </div> -->
 {% endblock %}
 
 {% block script %}

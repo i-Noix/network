@@ -8,6 +8,7 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
+from django.core.paginator import Paginator
 import json
 
 from .models import User, Posts
@@ -15,8 +16,12 @@ from .models import User, Posts
 
 def index(request):
     posts = Posts.objects.all().order_by('-date_time')
+    paginator = Paginator(posts, 10) #Show 10 posts per page.
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     return render(request, "network/index.html", {
-        'posts': posts
+        'page_obj': page_obj
     })
 
 @csrf_exempt
@@ -58,10 +63,14 @@ def following(request, user_id):
 def profile(request, user_id):
     profile_user = get_object_or_404(User, id=user_id)
     posts = profile_user.posts.all().order_by('-date_time')
+    paginator = Paginator(posts, 10) #Show 10 posts per page.
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
     is_following = profile_user.followers.filter(id=request.user.id).exists()
     return render(request, 'network/profile.html', {
         'profile_user': profile_user,
-        'posts': posts,
+        'page_obj': page_obj,
         'is_following': is_following
     })
 

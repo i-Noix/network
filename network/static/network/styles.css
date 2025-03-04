@@ -72,12 +72,12 @@
     margin-top: 20px;
     margin-bottom: 20px;
     padding: 20px 0px 0px 0px;
-  }
+}
   
 #followers {
     color: rgb(78, 78, 199);
     font-size: 1em;
-  }
+}
   
 .card button {
     border: none;
@@ -88,8 +88,8 @@
     width: 100%;
     font-size: 1.2em;
     font-family: Arial, Helvetica, sans-serif;
-  }
+}
     
 .card button:hover, a:hover {
     opacity: 0.7;
-  }
+}
