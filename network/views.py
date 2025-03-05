@@ -26,6 +26,29 @@ def index(request):
 
 @csrf_exempt
 @login_required
+def editPost(request, post_id):
+    if request.method == 'PUT':
+        # Get post or response 404
+        target_post = get_object_or_404(Posts, id=post_id)
+        # Get editContent
+        data = json.loads(request.body)
+        editContent = data.get('editContent')
+
+        # If the content is not specified, return an error
+        if not editContent:
+            return JsonResponse({'error': 'Content is required.'}, status=400)
+
+        # Change post value content in Posts 
+        target_post.content = editContent
+        target_post.save()
+        response = {'message': f'Content in post has been change success'}
+        return JsonResponse(response)
+    else:
+        response = {'error': 'Invalid editContent'}
+
+
+@csrf_exempt
+@login_required
 def follow_unfollow(request, user_id):
     if request.method == 'POST':
         target_user = get_object_or_404(User, id=user_id)

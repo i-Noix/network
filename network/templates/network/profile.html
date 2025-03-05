@@ -14,24 +14,24 @@
         {% endif %}
     </div>
     {% for post in page_obj %}
-        <div class="post">
+        <div class="post" id="post-{{ post.id }}">
             <a href="{% url 'profile' user_id=post.author.id %}"><strong>{{ post.author }}</strong></a>
             {% if user.is_authenticated and post.author.id == user.id %}
-                <a id="edit-link" href="#">Edit</a>
+                <a class="edit-link" href="#">Edit</a>
             {% endif %}
-            <p>{{ post.content }}</p>
+            <p id="content-{{ post.id }}">{{ post.content }}</p>
             <p>{{ post.date_time }}</p>
             <p><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-suit-heart-fill" viewBox="0 0 16 16">
                 <path d="M4 1c2.21 0 4 1.755 4 3.92C8 2.755 9.79 1 12 1s4 1.755 4 3.92c0 3.263-3.234 4.414-7.608 9.608a.513.513 0 0 1-.784 0C3.234 9.334 0 8.183 0 4.92 0 2.755 1.79 1 4 1"/>
               </svg>{{ post.likes.count }}</p>
         </div>
         <!-- Create div for edit post when user click edit-link -->
-        <div class="post-edit" style="display: none;">
-            <form action="#" class="edit-form" method="PULL">
+        <div class="post-edit" id="edit-post-{{ post.id }}" style="display: none;">
+            <form action="#" id="edit-form-{{ post.id }}" method="PUT">
                 {% csrf_token %}
                 <div class="mb-3 my-3 newPost">
                     <label for="content"><h5>Edit Post</h5></label>
-                    <textarea class="form-control" rows="5" name="text" id="content">{{ post.content }}</textarea>
+                    <textarea class="form-control" rows="5" name="text" id="edit-content-{{ post.id }}">{{ post.content }}</textarea>
                     <button type="submit" class="btn btn-warning">Save</button>
                 </div>
             </form>

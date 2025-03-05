@@ -28,6 +28,8 @@ export function initProfile() {
         });
     }
 
+
+
     document.getElementById('follow-btn').onclick = function() {
         const userId = this.dataset.user;
         setFollowValues('follow', userId);
