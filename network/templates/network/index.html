@@ -38,8 +38,7 @@
         </div>
         <!-- Create div for edit post when user click edit-link -->
         <div class="post-edit" id="edit-post-{{ post.id }}" style="display: none;">
-            <form action="#" id="edit-form-{{ post.id }}" method="PUT">
-                {% csrf_token %}
+            <form id="edit-form-{{ post.id }}">
                 <div class="mb-3 my-3 newPost">
                     <label for="content"><h5>Edit Post</h5></label>
                     <textarea class="form-control" rows="5" name="text" id="edit-content-{{ post.id }}">{{ post.content }}</textarea>

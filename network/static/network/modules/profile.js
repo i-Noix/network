@@ -1,10 +1,17 @@
 export function initProfile() {
     
+    function getCSRFToken() {
+        return document.cookie.split('; ')
+            .find(row => row.startsWith('csrftoken='))
+            ?.split('=')[1];
+    }
+    
     function setFollowValues(action, userId) {
         fetch(`/follow/${userId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
             },
             body: JSON.stringify({
                 action: action

@@ -1,10 +1,17 @@
 export function EditPost () {
 
+    function getCSRFToken() {
+        return document.cookie.split('; ')
+            .find(row => row.startsWith('csrftoken='))
+            ?.split('=')[1];
+    }
+
     function setEditPost(postId, editContent) {
         fetch(`/editPost/${postId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
+                'X-CSRFToken': getCSRFToken()
             },
             body: JSON.stringify({
                 editContent: editContent

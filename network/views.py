@@ -7,7 +7,6 @@ from django.views.decorators.http import require_POST
 from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
-from django.views.decorators.csrf import csrf_exempt
 from django.core.paginator import Paginator
 import json
 
@@ -24,7 +23,7 @@ def index(request):
         'page_obj': page_obj
     })
 
-@csrf_exempt
+
 @login_required
 def editPost(request, post_id):
     if request.method == 'PUT':
@@ -46,30 +45,28 @@ def editPost(request, post_id):
     else:
         response = {'error': 'Invalid editContent'}
 
-
-@csrf_exempt
+@require_POST
 @login_required
 def follow_unfollow(request, user_id):
-    if request.method == 'POST':
-        target_user = get_object_or_404(User, id=user_id)
-        data = json.loads(request.body)
-        action = data.get('action') # Get follow or unfollow
+    target_user = get_object_or_404(User, id=user_id)
+    data = json.loads(request.body)
+    action = data.get('action') # Get follow or unfollow
 
-        if action == 'follow':
-            request.user.following.add(target_user)
-            response = {
-                'message': f'You are now following {target_user.username}',
-                'followers': request.user.following.count()
-                }
-        elif action == 'unfollow':
-            request.user.following.remove(target_user)
-            response = {
-                'message': f'You have unfollowed {target_user.username}',
-                'followers': request.user.following.count()
-                }
-        else:
-            response = {'error': 'Invalid action'}
-        return JsonResponse(response)
+    if action == 'follow':
+        request.user.following.add(target_user)
+        response = {
+            'message': f'You are now following {target_user.username}',
+            'followers': target_user.followers.count()
+            }
+    elif action == 'unfollow':
+        request.user.following.remove(target_user)
+        response = {
+            'message': f'You have unfollowed {target_user.username}',
+            'followers': target_user.followers.count()
+            }
+    else:
+        response = {'error': 'Invalid action'}
+    return JsonResponse(response)
 
 
 @login_required
