@@ -1,4 +1,5 @@
-document.addEventListener('DOMContentLoaded', function() {
+export function initProfile() {
+    
     function setFollowValues(action, userId) {
         fetch(`/follow/${userId}`, {
             method: 'POST',
@@ -30,11 +31,9 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('follow-btn').onclick = function() {
         const userId = this.dataset.user;
         setFollowValues('follow', userId);
-    }
+    };
     document.getElementById('unfollow-btn').onclick = function() {
         const userId = this.dataset.user;
         setFollowValues('unfollow', userId);
-    }
-    
-
-});
+    };
+}
