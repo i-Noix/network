@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
-from django.http import HttpResponse, HttpResponseRedirect, JsonResponse 
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseForbidden
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse
 from django.views.decorators.http import require_POST
@@ -29,8 +29,17 @@ def editPost(request, post_id):
     if request.method == 'PUT':
         # Get post or response 404
         target_post = get_object_or_404(Posts, id=post_id)
+
+        # Check that request.user is author post
+        if request.user.id != target_post.author.id:
+            return JsonResponse({'error': 'You are not allowed to edit this post.'}, status=403)
+
         # Get editContent
-        data = json.loads(request.body)
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+        
         editContent = data.get('editContent')
 
         # If the content is not specified, return an error
@@ -40,17 +49,27 @@ def editPost(request, post_id):
         # Change post value content in Posts 
         target_post.content = editContent
         target_post.save()
-        response = {'message': f'Content in post has been change success'}
+
+        response = {'message': f'Content in post has been change successfully updated.'}
         return JsonResponse(response)
     else:
-        response = {'error': 'Invalid editContent'}
+        return JsonResponse({'error': 'Method not allowed'}, status=405)
 
 @require_POST
 @login_required
 def follow_unfollow(request, user_id):
     target_user = get_object_or_404(User, id=user_id)
-    data = json.loads(request.body)
+
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+    
     action = data.get('action') # Get follow or unfollow
+
+    # Check if action specified
+    if not action or action not in ['follow', 'unfollow']:
+        return JsonResponse({'error': 'Invalid action'}, status=400)
 
     if action == 'follow':
         request.user.following.add(target_user)
@@ -64,8 +83,6 @@ def follow_unfollow(request, user_id):
             'message': f'You have unfollowed {target_user.username}',
             'followers': target_user.followers.count()
             }
-    else:
-        response = {'error': 'Invalid action'}
     return JsonResponse(response)
 
 
