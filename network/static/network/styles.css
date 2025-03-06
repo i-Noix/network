@@ -29,21 +29,15 @@
     box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
 }
 
-.post p {
+.post > p {
     font-size: 0.9em;
     color: grey;
     margin: 0;
 }
 
-.post p:first-of-type{
+.post > p:first-of-type{
     color: #111111;
-}
-
-.post svg{
-    color: red;
-    margin-right: 5px;
-    height: 0.9em;
-    width: 0.9em;
+    width: 50%;
 }
 
 .post a {
@@ -61,6 +55,21 @@
     cursor: pointer;
     text-decoration: underline;
     text-shadow: 2px 2px 4px #d8d4d4;
+}
+
+.div-likes p {
+    display: inline;
+    margin-right: 5px;
+    font-size: 0.9em;
+    color: grey;
+}
+
+.div-likes .like {
+    color: blue;
+}
+
+.div-likes .dislike {
+    color: red;
 }
 
 /* Style for page Profile */

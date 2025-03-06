@@ -10,7 +10,7 @@ from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
 import json
 
-from .models import User, Posts
+from .models import User, Posts, Like
 
 
 def index(request):
@@ -19,6 +19,12 @@ def index(request):
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+
+    # Count likes/dislikes and adding new atrributes for post in page_obj
+    for post in page_obj:
+        post.likes_count = Like.objects.filter(post=post, reaction='like').count()
+        post.dislikes_count = Like.objects.filter(post=post, reaction='dislike').count()
+
     return render(request, "network/index.html", {
         'page_obj': page_obj
     })
@@ -93,8 +99,19 @@ def following(request, user_id):
     # Get all following_id that user are following
     followingListId = user.following.values_list('id', flat=True)
     posts = Posts.objects.filter(author__id__in = followingListId).order_by('-date_time')
+
+    paginator = Paginator(posts, 10) #Show 10 posts per page.
+
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+
+    # Count likes/dislikes and adding new atrributes for post in page_obj
+    for post in page_obj:
+        post.likes_count = Like.objects.filter(post=post, reaction='like').count()
+        post.dislikes_count = Like.objects.filter(post=post, reaction='dislike').count()
+
     return render(request, 'network/following.html', {
-        'posts': posts
+        'page_obj': page_obj
     })
 
 def profile(request, user_id):
@@ -104,6 +121,12 @@ def profile(request, user_id):
 
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+
+# Count likes/dislikes and adding new atrributes for post in page_obj
+    for post in page_obj:
+        post.likes_count = Like.objects.filter(post=post, reaction='like').count()
+        post.dislikes_count = Like.objects.filter(post=post, reaction='dislike').count()
+
     is_following = profile_user.followers.filter(id=request.user.id).exists()
     return render(request, 'network/profile.html', {
         'profile_user': profile_user,
