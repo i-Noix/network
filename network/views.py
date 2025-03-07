@@ -1,3 +1,7 @@
+# Standart libraries
+import json
+
+# Django imports
 from django.contrib.auth import authenticate, login, logout
 from django.db import IntegrityError
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse, HttpResponseForbidden
@@ -8,8 +12,8 @@ from django.shortcuts import redirect
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.paginator import Paginator
-import json
 
+# network app imports
 from .models import User, Posts, Like
 
 
@@ -24,12 +28,54 @@ def index(request):
     for post in page_obj:
         post.likes_count = Like.objects.filter(post=post, reaction='like').count()
         post.dislikes_count = Like.objects.filter(post=post, reaction='dislike').count()
+        if request.user.is_authenticated:
+            post.user_liked = Like.objects.filter(post=post, user=request.user, reaction='like').exists()
+            post.user_disliked = Like.objects.filter(post=post, user=request.user, reaction='dislike').exists()
 
     return render(request, "network/index.html", {
         'page_obj': page_obj
     })
 
+@login_required
+@require_POST
+def like_dislike(request, post_id):
+    post = get_object_or_404(Posts, id=post_id)
 
+    # Get reaction
+    try:
+        data = json.loads(request.body)
+    except json.JSONDecodeError:
+        return JsonResponse({'error': 'Invalid JSON data'}, status=400)
+
+    reaction = data.get('reaction')
+
+    # Check reacion on correct
+    if reaction not in ['like', 'dislike']:
+        return JsonResponse({'error': 'Invalid reaction'}, status=400)
+
+     # If the reaction is not specified, return an error
+    if not reaction:
+            return JsonResponse({'error': 'Reaction is required.'}, status=400)
+    
+    # Check what reaction has been post and create a new object or update
+    like_obj, created = Like.objects.update_or_create(
+        user = request.user,
+        post = post,
+        defaults= {'reaction': reaction}
+    )
+    # Count all likes and dislikes for the post
+    likes = Like.objects.filter(post=post, reaction='like').count()
+    dislikes = Like.objects.filter(post=post, reaction='dislike').count()
+    count = {'likes': likes, 'dislikes': dislikes}
+
+    # Inform if record has been created or update
+    if created:
+        response = {'message': f'{reaction.capitalize()} has been added successfully', 'count': count}
+    else:
+        response = {'message': f'Reaction has been changed to "{reaction}" successfully', 'count': count}
+
+    return JsonResponse(response)
+    
 @login_required
 def editPost(request, post_id):
     if request.method == 'PUT':
@@ -109,6 +155,8 @@ def following(request, user_id):
     for post in page_obj:
         post.likes_count = Like.objects.filter(post=post, reaction='like').count()
         post.dislikes_count = Like.objects.filter(post=post, reaction='dislike').count()
+        post.user_liked = Like.objects.filter(post=post, user=request.user, reaction='like').exists()
+        post.user_disliked = Like.objects.filter(post=post, user=request.user, reaction='dislike').exists()
 
     return render(request, 'network/following.html', {
         'page_obj': page_obj
@@ -126,6 +174,8 @@ def profile(request, user_id):
     for post in page_obj:
         post.likes_count = Like.objects.filter(post=post, reaction='like').count()
         post.dislikes_count = Like.objects.filter(post=post, reaction='dislike').count()
+        post.user_liked = Like.objects.filter(post=post, user=request.user, reaction='like').exists()
+        post.user_disliked = Like.objects.filter(post=post, user=request.user, reaction='dislike').exists()
 
     is_following = profile_user.followers.filter(id=request.user.id).exists()
     return render(request, 'network/profile.html', {

@@ -22,8 +22,17 @@
             <p id="content-{{ post.id }}">{{ post.content }}</p>
             <p>{{ post.date_time }}</p>
             <div class="div-likes">
-                <p class="like" id="like-{{ post.id }}"><i class="bi bi-hand-thumbs-up"></i>{{ post.likes_count }}</p>
-                <p class="dislike" id="dislike-{{ post.id }}"><i class="bi bi-hand-thumbs-down"></i>{{ post.dislikes_count }}</p>
+                {% if user.is_authenticated %}
+                    <a class="like reactions" id="like-{{ post.id }}">
+                        <i class="bi {% if post.user_liked %}bi-hand-thumbs-up-fill{% else %}bi-hand-thumbs-up{% endif %}"></i>{{ post.likes_count }}
+                    </a>
+                    <a class="dislike reactions" id="dislike-{{ post.id }}">
+                        <i class="bi {% if post.user_disliked %}bi-hand-thumbs-down-fill{% else %}bi-hand-thumbs-down{% endif %}"></i>{{ post.dislikes_count }}
+                    </a>
+                {% else %}
+                    <p class="like"><i class="bi bi-hand-thumbs-up"></i>{{ post.likes_count }}</p>
+                    <p class="dislike""><i class="bi bi-hand-thumbs-down"></i>{{ post.dislikes_count }}</p>
+                {% endif %}
             </div>
         </div>
         <!-- Create div for edit post when user click edit-link -->

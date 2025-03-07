@@ -40,28 +40,32 @@
     width: 50%;
 }
 
-.post a {
+.post > a {
     display: block;
     font-size: 0.9em;
 }
 
-.post a:first-of-type{
+.post > a:first-of-type{
     color: #111111;
     font-size: 1.1em;
     margin-bottom: 10px;
 }
 
-.post a:first-of-type:hover{
+.post > a:first-of-type:hover{
     cursor: pointer;
     text-decoration: underline;
     text-shadow: 2px 2px 4px #d8d4d4;
 }
 
-.div-likes p {
+.div-likes > p, .div-likes > a {
     display: inline;
-    margin-right: 5px;
+    /* margin-right: 5px; */
     font-size: 0.9em;
     color: grey;
+}
+
+.div-likes a {
+    cursor: pointer;
 }
 
 .div-likes .like {
