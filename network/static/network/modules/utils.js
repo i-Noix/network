@@ -40,16 +40,24 @@ export function EditPost () {
             // Find appropriate div with class edit-post
             const postId = postDiv.id.split('-')[1];
             const editDiv = document.getElementById(`edit-post-${postId}`);
+            const textarea = document.getElementById(`edit-content-${postId}`);
 
             // Change display in div
             postDiv.style.display = 'none';
             editDiv.style.display = 'block';
 
+            // Set focus on editDiv
+            textarea.focus();
+
+            // Set focus at the end of the textarea
+            const length = textarea.value.length;
+            textarea.setSelectionRange(length, length)
+
             // Add event to the edit-form
             document.getElementById(`edit-form-${postId}`).onsubmit = function(event) {
                 event.preventDefault(); // Prevent standart behavior submit form
                 // Get edit content
-                const editContent = document.getElementById(`edit-content-${postId}`).value;
+                const editContent = textarea.value;
 
                 setEditPost(postId, editContent);
                 // Update content
