@@ -7,6 +7,12 @@ class User(AbstractUser):
 
     following = models.ManyToManyField('self', symmetrical=False, related_name='followers', blank=True)
 
+    def is_valid_following(self):
+        if self.following.filter(id=self.id).exists():
+            self.following.remove(self)
+            return False
+        return True
+
 class Posts(models.Model):
     author = models.ForeignKey(User, on_delete=models.CASCADE,related_name='posts')
     content = models.TextField(blank=False)
@@ -14,6 +20,9 @@ class Posts(models.Model):
 
     def __str__(self):
         return f'{self.author}: {self.content}'
+    
+    def is_valid_post(self):
+        return bool(self.content.strip())
     
 class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -24,3 +33,7 @@ class Like(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['user', 'post'], name='unique_user_post')
         ]
+    
+    def __str__(self):
+        return f'{self.user.username} {self.reaction} this post: {self.post.id}'
+    

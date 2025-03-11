@@ -122,6 +122,9 @@ def follow_unfollow(request, user_id):
     # Check if action specified
     if not action or action not in ['follow', 'unfollow']:
         return JsonResponse({'error': 'Invalid action'}, status=400)
+    
+    if target_user.id == request.user.id:
+        return JsonResponse({'error': 'You cannot follow yourself'}, status=400)
 
     if action == 'follow':
         request.user.following.add(target_user)
