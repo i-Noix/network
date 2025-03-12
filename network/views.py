@@ -96,13 +96,13 @@ def editPost(request, post_id):
 
         # If the content is not specified, return an error
         if not editContent:
-            return JsonResponse({'error': 'Content is required.'}, status=400)
+            return JsonResponse({'error': 'Content must not be empty!'}, status=400)
 
         # Change post value content in Posts 
         target_post.content = editContent
         target_post.save()
 
-        response = {'message': f'Content in post has been change successfully updated.'}
+        response = {'message': f'Changes successfully made.'}
         return JsonResponse(response)
     else:
         return JsonResponse({'error': 'Method not allowed'}, status=405)

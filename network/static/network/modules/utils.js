@@ -7,6 +7,7 @@ export function EditPost () {
     }
 
     function setEditPost(postId, editContent) {
+        
         fetch(`/editPost/${postId}`, {
             method: 'PUT',
             headers: {
@@ -20,12 +21,40 @@ export function EditPost () {
         .then(response => response.json())
         .then(data => {
             console.log(data);
-            document.getElementById(`content-${postId}`).textContent = editContent;
+            if (data.error) {
+                displayMessage('warning', data.error);
+            } else if (data.message) {
+                document.getElementById(`content-${postId}`).textContent = editContent;
+                const postDiv = document.getElementById(`post-${postId}`);
+                const editDiv = document.getElementById(`edit-post-${postId}`);
+                postDiv.style.display = 'block';
+                editDiv.style.display = 'none';
+                displayMessage('success', data.message);
+            }
         })
         .catch(error => {
             console.error('Error:', error);
         });
 
+        function displayMessage(type, message) {
+            const messageContainer = document.createElement('div');
+            messageContainer.classList.add('alert');
+            messageContainer.classList.add(`alert-${type}`);
+            messageContainer.textContent = message;
+        
+            // Adding message to container
+            if (type === 'warning') {
+                document.querySelector('.post-edit').appendChild(messageContainer);
+            } else if (type === 'success') {
+                document.querySelector('.post').appendChild(messageContainer);
+            }
+        
+            // Remove timer
+            setTimeout(() => {
+                messageContainer.remove();
+            }, 5000);
+        }
+        
     }
 
     const editLinks = document.querySelectorAll('.edit-link');
@@ -60,9 +89,6 @@ export function EditPost () {
                 const editContent = textarea.value;
 
                 setEditPost(postId, editContent);
-                // Update content
-                postDiv.style.display = 'block';
-                editDiv.style.display = 'none';
             }
         }
     });
