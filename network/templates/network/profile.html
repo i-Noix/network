@@ -8,6 +8,7 @@
     <div class="card">
         <h2>{{ profile_user.username }}</h2>
         <p id="followers">{{ profile_user.followers.count }} followers</p>
+        <p id="followings">{{ profile_user.following.count }} followings</p>
         {% if user.is_authenticated and user.id != profile_user.id %}
             <button data-user="{{ profile_user.id }}" class="btn btn-primary" id="follow-btn" {% if is_following %} style="display: none;" {% endif %}>Follow</button>
             <button data-user="{{ profile_user.id }}" class="btn btn-danger" id="unfollow-btn" {% if not is_following %} style="display: none;" {% endif %}>Unfollow</button>
@@ -46,34 +47,36 @@
             </form>
         </div>
     {% empty %}
-        <p>The {{ profile_user.username }} has no posts yet!</p>
+        <p class="emptyList">The {{ profile_user.username }} has no posts yet!</p>
     {% endfor %}
-    <div class="pagination-container">
-        <ul class="pagination justify-content-center">
-            {% if page_obj.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page=1">&laquo; First</a>
-                </li>
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-                </li>
-            {% endif %}
-            {% for page in page_obj.paginator.page_range %}
-                {% if page >= page_obj.number|add:"-2" and page <= page_obj.number|add:"2" %}
-                    <li class="page-item {% if page == page_obj.number %}active{% endif %}">
-                        <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+    {% if page_obj %}
+        <div class="pagination-container">
+            <ul class="pagination justify-content-center">
+                {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1">&laquo; First</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
                     </li>
                 {% endif %}
-            {% endfor %}
-            {% if page_obj.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
-                    </li>
-            {% endif %}
-        </ul>
-    </div>
+                {% for page in page_obj.paginator.page_range %}
+                    {% if page >= page_obj.number|add:"-2" and page <= page_obj.number|add:"2" %}
+                        <li class="page-item {% if page == page_obj.number %}active{% endif %}">
+                            <a class="page-link" href="?page={{ page }}">{{ page }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last &raquo;</a>
+                        </li>
+                {% endif %}
+            </ul>
+        </div>
+    {% endif %}
     
 {% endblock %}

@@ -17,6 +17,14 @@
 }
 
 /* Style for div post on page All posts */
+.emptyList {
+    padding: 20px;
+    margin-left: 10px;
+    margin-bottom: 5px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 1.2em;
+}
+
 .post {
     border: 1px solid #dad7d7;
     border-radius: 5px;
@@ -37,7 +45,7 @@
 
 .post > p:first-of-type{
     color: #111111;
-    width: 50%;
+    word-wrap: break-word;
 }
 
 .post > a {
@@ -89,6 +97,12 @@
   
 #followers {
     color: rgb(78, 78, 199);
+    font-size: 1em;
+    margin-bottom: 0px;
+}
+
+#followings {
+    color: red;
     font-size: 1em;
 }
   

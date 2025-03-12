@@ -125,3 +125,39 @@ export function likeDislake() {
     })
 }
 
+export function AddPostMessage() {
+    function hideMessage(node) {
+        node.style.transition = "opacity 0.5s ease-out";
+        node.style.opacity = "0";
+
+        setTimeout(() => {
+            if (node.parentNode) {
+                node.remove();
+            }
+        }, 500);
+    }
+
+    function scheduleHide(node) {
+        setTimeout(() => {
+            hideMessage(node);
+        }, 2000);
+    }
+
+    document.querySelectorAll(".messages").forEach(scheduleHide);
+
+    const observer = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            mutation.addedNodes.forEach((node) => {
+                if (node.classList && node.classList.contains("messages")) {
+                    console.log("The message appeared!");
+                    scheduleHide(node);
+                }
+            });
+        });
+    });
+
+    // Спостерігаємо за `body`, щоб знаходити нові повідомлення
+    observer.observe(document.body, { childList: true, subtree: true });
+}
+
+
